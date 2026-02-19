@@ -20,41 +20,83 @@ const App: React.FC = () => {
           {
             id: 'background',
             type: 'background',
-            paint: { 'background-color': '#a2d2ff' }
+            paint: { 'background-color': '#f8f9fa' }
           }
         ]
       },
-      center: [0, 0],
+      center: [60, 30],
       zoom: 2
     });
 
     map.current.on('load', () => {
-      map.current?.resize();
-      map.current?.setProjection({ type: 'globe' });
+      if (!map.current) return;
 
-      map.current?.addSource('world-data', {
+      map.current.setProjection({ type: 'globe' });
+
+      map.current.addSource('zones-data', {
         type: 'geojson',
-        data: 'data/world_adm.geojson' 
+        data: 'data/zones.geojson'
       });
 
-      map.current?.addLayer({
-        id: 'land-fill',
+      map.current.addLayer({
+        id: 'zones-fill',
         type: 'fill',
-        source: 'world-data',
+        source: 'zones-data',
         paint: {
-          'fill-color': '#f0f0f0',
-          'fill-outline-color': '#333333'
+          'fill-color': [
+            'match',
+            ['get', 'Приро'],
+            'смешанных', '#90EE90',
+            'лесостепей и степей', '#F0E68C',
+            'полупустынь и пустынь', '#F4A460',
+            'саванн и редколесий', '#BDB76B',
+            'жестколистных', '#808000',
+            'влажных', '#008080',
+            'переменно-влажных', '#20B2AA',
+            'тайги', '#9ACD32',
+            'тундры и лесотундры', '#DDA0DD',
+            'арктических','#DCDCDC',
+            'области высотной поясности','#FFB6C1',
+            '#9bf6ff'          // Цвет по умолчанию
+          ],
+          'fill-opacity': 0.7
         }
       });
 
-      map.current?.addLayer({
-        id: 'land-borders',
+      map.current.addLayer({
+        id: 'zones-borders',
         type: 'line',
-        source: 'world-data',
+        source: 'zones-data',
         paint: {
-          'line-color': '#555555',
-          'line-width': 0.5
+          'line-color': '#333',
+          'line-width': 1
         }
+      });
+
+      // Обработка клика
+      map.current.on('click', 'zones-fill', (e) => {
+        if (!e.features || e.features.length === 0) return;
+
+        const feature = e.features[0];
+        const properties = feature.properties;
+
+        new maplibregl.Popup()
+          .setLngLat(e.lngLat)
+          .setHTML(`
+            <div style="color: #333; padding: 5px;">
+              <h3 style="margin: 0 0 5px 0;">Инфо о зоне</h3>
+              <p><strong>Приро:</strong> ${properties?.Приро || 'Не указано'}</p>
+            </div>
+          `)
+          .addTo(map.current!);
+      });
+
+      // Меняем курсор при наведении
+      map.current.on('mouseenter', 'zones-fill', () => {
+        map.current!.getCanvas().style.cursor = 'pointer';
+      });
+      map.current.on('mouseleave', 'zones-fill', () => {
+        map.current!.getCanvas().style.cursor = '';
       });
     });
 
@@ -65,10 +107,8 @@ const App: React.FC = () => {
 
   return (
     <div className="app-container">
-      {/* Карта */}
       <div ref={mapContainer} className="map-container" />
-
-      {/* Боковое меню */}
+      
       <div className={`side-menu ${isMenuOpen ? 'open' : 'hidden'}`}>
         <button onClick={() => setIsMenuOpen(false)} className="close-btn">✕</button>
         <h2>Доступность</h2>
@@ -76,7 +116,6 @@ const App: React.FC = () => {
         <button className="menu-btn" onClick={() => alert('Режим Слабовидение')}>Слабовидение</button>
       </div>
 
-      {/* Кнопка настроек */}
       {!isMenuOpen && (
         <button onClick={() => setIsMenuOpen(true)} className="main-btn">
           Настройки
