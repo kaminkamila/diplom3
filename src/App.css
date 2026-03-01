@@ -126,7 +126,7 @@ html, body, #root {
   padding: 20px 40px;
   font-size: 28px;
   font-weight: 900;
-  border: 5px solid #000;
+  border: 1px solid #000;
   border-radius: 15px;
   z-index: 150;
   text-align: center;
@@ -134,3 +134,66 @@ html, body, #root {
 }
 
 .close-btn { background: none; border: none; font-size: 24px; cursor: pointer; float: right; }
+
+/* Увеличенная контрастная стрелка для режима слабовидения и ахромазии */
+.app-container.large-cursor, 
+.app-container.large-cursor *,
+.app-container.large-cursor .maplibregl-canvas {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 24 24' fill='white' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 3l7.07 16.97 2.51-7.39 7.39-2.51L3 3z'/%3E%3C/svg%3E") 0 0, auto !important;
+}
+
+/* Легенда карты */
+.legend-toggle-btn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 10;
+}
+
+.legend-panel {
+  position: absolute;
+  top: 80px;
+  left: 20px;
+  width: 280px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  max-height: 70vh;
+}
+
+.legend-header {
+  padding: 15px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.legend-header h3 { margin: 0; font-size: 18px; }
+
+.legend-scroll {
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.legend-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+}
+
+.legend-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.legend-label {
+  font-size: 14px;
+  color: #333;
+}
