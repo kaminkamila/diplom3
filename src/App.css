@@ -197,3 +197,337 @@ html, body, #root {
   font-size: 14px;
   color: #333;
 }
+
+.view-navigation {
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  pointer-events: none;
+  z-index: 100;
+}
+.view-navigation button { pointer-events: auto; }
+.extent-counter {
+  position: absolute;
+  top: 20px; left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.7);
+  color: white; padding: 10px 20px;
+  border-radius: 20px; font-size: 24px;
+}
+.close-view-btn {
+  position: absolute; top: 20px; right: 20px;
+  background: white; border: none; border-radius: 50%; padding: 10px;
+}
+.extent-tools { padding: 10px; }
+.saved-list { margin-top: 10px; font-size: 14px; color: #666; display: flex; align-items: center; gap: 10px; }
+.share-btn { background-color: #4CAF50 !important; color: white !important; margin-top: 10px; }
+.active { background-color: #ffda79 !important; }
+
+/* Скрытие элементов для зрячих, оставляя доступными для скринридеров */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* --- ОБНОВЛЕННЫЕ СТИЛИ ПРИВЕТСТВЕННОГО ЭКРАНА (ЦЕНТРИРОВАНИЕ) --- */
+.welcome-screen, .setup-screen  {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(122, 153, 185, 0.2); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  font-family: 'Crimson Text', serif;
+}
+
+.welcome-content-container {
+  position: relative;
+  width: 100vw;
+  bottom: 30px;
+  height: 80vh;
+  overflow: hidden;
+}
+
+.welcome-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.welcome-text-block {
+  position: absolute;
+  right: 5%; 
+  top: 8%; 
+  width: 42%; 
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  /* ПРАВКА: Центрируем заголовок относительно блока */
+  align-items: center; 
+}
+
+.welcome-title {
+  color: black;
+  font-size: 48px; 
+  margin: 0;
+  font-weight: normal;
+  white-space: nowrap; 
+  /* ПРАВКА: Текст заголовка по центру */
+  text-align: center;
+}
+
+.welcome-description-box {
+  background: white;
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  /* ПРАВКА: Чтобы блок растягивался правильно при центрировании */
+  width: 100%; 
+}
+
+.welcome-description-box p {
+  margin: 0;
+  color: black;
+  font-size: 20px; 
+  line-height: 1.35;
+  /* ПРАВКА: Выравнивание текста внутри прямоугольника по центру */
+  text-align: center; 
+}
+
+/* --- КНОПКА (БЕЗ ИЗМЕНЕНИЙ) --- */
+.welcome-start-btn, .confirm-setup-btn {
+  position: absolute;
+  width: 220px; 
+  height: 60px;
+  left: 50%;
+  bottom: 3%; 
+  transform: translateX(-50%);
+  background: #3B82F6;
+  opacity: 1;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 30;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s, background 0.2s;
+}
+
+.welcome-start-btn:hover, .confirm-setup-btn:hover {
+  background: #2563eb;
+  transform: translateX(-50%) scale(1.05);
+}
+
+/* --- ЭКРАН НАСТРОЕК (SETUP) --- */
+
+/* Кнопка "Назад" */
+.back-link-top {
+  position: absolute;
+  top: 40px;
+  left: 40px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #000000;
+  font-family: 'Crimson Text', serif;
+}
+
+.back-link-top:hover {
+  color: #000;
+}
+
+.setup-container {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  align-items: center;
+  width: 100%;
+}
+
+.setup-section {
+  text-align: center;
+}
+
+.setup-label {
+  font-size: 2.2rem;
+  margin-bottom: 25px;
+  color: #000;
+  font-weight: 700;
+}
+
+.setup-row {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+/* --- КНОПКИ ВЫБОРА РЕЖИМА (ИСПРАВЛЕНО) --- */
+.setup-btn {
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  padding: 20px 35px;
+  font-size: 1.3rem;
+  min-width: 250px;
+  cursor: pointer;
+  border-radius: 10px;
+  color: #333;
+  transition: all 0.2s ease-in-out;
+  
+  /* КРИТИЧЕСКИЕ ПРАВКИ ПРОТИВ ЖЕЛТИЗНЫ: */
+  outline: none !important; /* Убирает контур фокуса */
+  -webkit-tap-highlight-color: transparent; /* Убирает синий/желтый квадрат при клике на смартфонах */
+  user-select: none; /* Убирает выделение текста при частом клике */
+}
+
+/* Убираем фокус-рамку для всех типов нажатий */
+.setup-btn:focus, 
+.setup-btn:active, 
+.setup-btn:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* Подсветка при наведении — Твой зеленый */
+.setup-btn:hover {
+  border-color: #92B06D !important;
+  background-color: #f0f7e9;
+  color: #92B06D;
+}
+
+/* Активное состояние (нажата) — Твой зеленый */
+.setup-btn.active {
+  background-color: #92B06D !important;
+  color: white !important;
+  border-color: #92B06D !important;
+}
+
+.record-route-btn {
+  position: absolute;
+  width: 50.45px;
+  height: 52.03px;
+  right: 40px;
+  bottom: 40px;
+  background: white;
+  border: 2px solid #000;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 100;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.extent-recording-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 200;
+}
+
+.extent-plaque {
+  position: absolute;
+  width: 383px;
+  height: 68px;
+  left: 50%;
+  top: 40px;
+  transform: translateX(-50%);
+  background: #9ACD32;
+  border: 2px solid #000;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.extent-plaque .plaque-main {
+  font-family: 'Crimson Text', serif;
+  font-size: 36px;
+  color: #000;
+}
+
+.extent-plaque .plaque-counter {
+  font-family: 'Inter', sans-serif;
+  font-size: 20px;
+  color: #000;
+  margin-top: 4px;
+}
+
+.extent-cancel-btn {
+  position: absolute;
+  top: 120px;
+  right: 50px;
+  background: #D9D9D9;
+  border: 1px solid #000;
+  width: 45px;
+  height: 45px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 210;
+}
+
+.record-route-btn {
+  position: absolute;
+  bottom: 40px;
+  right: 120px;           /* сдвинул, чтобы не перегораживала controls-stack */
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  background: white;
+  border: 3px solid #000;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 110;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  transition: all 0.2s;
+}
+
+.record-route-btn:hover {
+  background: #f0f0f0;
+  transform: scale(1.08);
+}
+
+.generate-link-overlay {
+  position: absolute;
+  bottom: 120px;
+  right: 40px;
+  background: #22c55e;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 30px;
+  font-size: 16px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  z-index: 110;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
