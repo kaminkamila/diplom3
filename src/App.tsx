@@ -215,25 +215,27 @@ const App: React.FC = () => {
   };
 
   // --- ЕДИНОРАЗОВАЯ ИНИЦИАЛИЗАЦИЯ КАРТЫ ---
-  useEffect(() => {
-    if (step !== 'map' || !mapContainer.current || mapRef.current) return;
-
-    const startBg = viewModeRef.current === 'lowVision' ? '#000' : (viewModeRef.current === 'achromatopsia' ? '#fff' : '#a2d2ff');
-
-    const m = new maplibregl.Map({
-      container: mapContainer.current,
-      style: { 
-        version: 8, sources: {}, 
-        layers: [{ 
-          id: 'background', type: 'background', 
-          paint: { 'background-color': startBg } 
-        }] 
-      },
-      center: REGIONS[0].center, 
-      zoom: REGIONS[0].zoom,
-      interactive: !isViewOnly,
-      attributionControl: false // Отключаем стандартную атрибуцию
-    } as any);
+  // --- ЕДИНОРАЗОВАЯ ИНИЦИАЛИЗАЦИЯ КАРТЫ ---
+    useEffect(() => {
+        if (step !== 'map' || !mapContainer.current || mapRef.current) return;
+    
+        const startBg = viewModeRef.current === 'lowVision' ? '#000' : (viewModeRef.current === 'achromatopsia' ? '#fff' : '#a2d2ff');
+    
+        const m = new maplibregl.Map({
+          container: mapContainer.current,
+          style: { 
+            version: 8, sources: {}, 
+            layers: [{ 
+              id: 'background', type: 'background', 
+              paint: { 'background-color': startBg } 
+            }] 
+          },
+          center: REGIONS[0].center, 
+          zoom: REGIONS[0].zoom,
+          interactive: !isViewOnly,
+          attributionControl: false, // Отключаем стандартную атрибуцию
+          hash: true // <--- ДОБАВИТЬ ЭТУ СТРОЧКУ СЮДА
+        } as any);
 
     m.addControl(new maplibregl.AttributionControl({
       compact: true,
