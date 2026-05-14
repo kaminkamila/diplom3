@@ -47,13 +47,13 @@ const initialUrlState = getInitialStateFromUrl();
 
 // --- КОНСТАНТЫ ---
 const REGIONS: Region[] = [
-  { id: 'world', name: 'Весь мир', file: '', center: [20, 20], zoom: 1.5 },
-  { id: 'africa', name: 'Африка', file: 'data/africa.geojson', center: [18.49, 2.05], zoom: 2.59 },
-  { id: 'eurasia', name: 'Евразия', file: 'data/eurasia.geojson', center: [84.8, 55.6], zoom: 1.67 },
-  { id: 'northamerica', name: 'Северная Америка', file: 'data/northamerica.geojson', center: [-88.1, 65.3], zoom: 1.68 },
-  { id: 'southamerica', name: 'Южная Америка', file: 'data/southamerica.geojson', center: [-65.35, -26.24], zoom: 2.66 },
-  { id: 'australia', name: 'Австралия', file: 'data/australia.geojson', center: [142.84, -26.58], zoom: 3.2 },
-];
+    { id: 'world', name: 'Весь мир', file: '', center: [20, 20], zoom: 1.5 },
+    { id: 'africa', name: 'Африка', file: './data/africa.geojson', center: [18.49, 2.05], zoom: 2.59 },
+    { id: 'eurasia', name: 'Евразия', file: './data/eurasia.geojson', center: [84.8, 55.6], zoom: 1.67 },
+    { id: 'northamerica', name: 'Северная Америка', file: './data/northamerica.geojson', center: [-88.1, 65.3], zoom: 1.68 },
+    { id: 'southamerica', name: 'Южная Америка', file: './data/southamerica.geojson', center: [-65.35, -26.24], zoom: 2.66 },
+    { id: 'australia', name: 'Австралия', file: './data/australia.geojson', center: [142.84, -26.58], zoom: 3.2 },
+  ];
 
 const NORMAL_PALETTE: any = ['match', ['get', 'Zone'], 'смешанных лесов', '#90EE90', 'широколиственных лесов', '#3CB371', 'лесостепей', '#F0E68C', 'лесотундры', '#D2B48C', 'степей', '#FFF44F', 'степей (пампа)', '#FFF44F', 'полупустынь и пустынь', '#F4A460', 'саванн и редколесий', '#BDB76B', 'жестколистных вечнозеленых лесов и кустарников', '#808000', 'жестколистных вечнозеленых лесов и кустарников (средиземноморского типа)', '#808000', 'влажных экваториальных лесов', '#008080', 'переменно-влажных (в том числе муссонных) лесов', '#20B2AA', 'хвойных лесов (тайги)', '#9ACD32', 'тундры', '#DDA0DD', 'тундры и приокеанических лугов', '#D8BFD8', 'арктических пустынь', '#DCDCDC', 'области высотной поясности', '#FFB6C1', 'вечные снега и льды', '#E0FFFF', '#9bf6ff'];
 
@@ -141,7 +141,7 @@ const App: React.FC = () => {
   };
 
   const playClickSound = () => {
-    if (!isMutedRef.current) new Audio('music/Клик.mp3').play().catch(() => {});
+    if (!isMutedRef.current) new Audio('./music/click.mp3').play().catch(() => {});
   };
 
   const playZoneSound = useCallback((name: string) => {
@@ -155,7 +155,7 @@ const App: React.FC = () => {
       ? name 
       : `Зона ${name}`;
 
-    const audio = new Audio(`music/${fileName}.mp3`);
+    const audio = new Audio(`./music/${fileName}.mp3`);
     audio.play().catch(err => console.error("Audio error:", fileName, err));
     audioRef.current = audio;
   }, []);
@@ -294,7 +294,7 @@ const App: React.FC = () => {
       ];
 
       patterns.forEach(name => {
-        m.loadImage(`patterns/${name}.png`)
+        m.loadImage(`./patterns/${name}.png`)
           .then(response => {
             if (!m.hasImage(`pattern-${name}`)) {
               m.addImage(`pattern-${name}`, response.data, { pixelRatio: 5 });
@@ -305,7 +305,7 @@ const App: React.FC = () => {
           });
       });
 
-      m.addSource('zones-data', { type: 'geojson', data: 'data/mir.geojson' });
+      m.addSource('zones-data', { type: 'geojson', data: './data/mir.geojson' });
 
       m.addLayer({ id: 'zones-shaded', type: 'fill', source: 'zones-data', layout: { visibility: 'none' }, paint: { 'fill-color': '#000000', 'fill-opacity': 0.6 } });
       m.addLayer({ id: 'zones-fill', type: 'fill', source: 'zones-data', paint: { 'fill-color': NORMAL_PALETTE, 'fill-opacity': 0.7 } });
@@ -508,7 +508,7 @@ const App: React.FC = () => {
       <div className="welcome-screen">
         <div className="welcome-overlay">
           <div className="welcome-content-container">
-            <img src="data/image_132.png" alt="Фон" className="welcome-image" />
+            <img src="./data/image_132.png" alt="Фон" className="welcome-image" />
             <div className="welcome-text-block">
               <h1 className="welcome-title">Добро пожаловать!</h1>
               <div className="welcome-description-box">
