@@ -119,7 +119,7 @@ const App: React.FC = () => {
 
   const [isExtentMode, setIsExtentMode] = useState(false);
   const [savedExtents, setSavedExtents] = useState<ExtentData[]>(initialUrlState ? initialUrlState.extents : []);
-  const [isViewOnly, setIsViewOnly] = useState(!!initialUrlState);
+  const [isViewOnly] = useState(!!initialUrlState);
   const [viewExtentIdx, setViewExtentIdx] = useState(0);
   const [isDrawing, setIsDrawing] = useState(false);
   const [startPoint, setStartPoint] = useState<maplibregl.Point | null>(null);
@@ -508,7 +508,7 @@ const App: React.FC = () => {
       <div className="welcome-screen">
         <div className="welcome-overlay">
           <div className="welcome-content-container">
-            <img src="data/image 132.png" alt="Фон" className="welcome-image" />
+            <img src="data/image_132.png" alt="Фон" className="welcome-image" />
             <div className="welcome-text-block">
               <h1 className="welcome-title">Добро пожаловать!</h1>
               <div className="welcome-description-box">
