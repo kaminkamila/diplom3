@@ -105,7 +105,9 @@ const ANIMAL_ICONS: any = [
   'icon-default'
 ];
 
-const LEGEND_ITEMS = [
+// --- ЛЕГЕНДЫ ---
+// Легенда для обычного режима (цветная)
+const LEGEND_ITEMS_NORMAL = [
   { name: 'Смешанные леса', color: '#90EE90' },
   { name: 'Широколиственные леса', color: '#3CB371' },
   { name: 'Лесостепи', color: '#F0E68C' },
@@ -123,12 +125,31 @@ const LEGEND_ITEMS = [
   { name: 'Вечные снега и льды', color: '#E0FFFF' }
 ];
 
+// Легенда для дальтонизма (серый + паттерн)
+const LEGEND_ITEMS_ACHROM = [
+  { name: 'Смешанные леса', color: '#888888', pattern: 'pattern-mixed' },
+  { name: 'Широколиственные леса', color: '#666666', pattern: 'pattern-broadleaf' },
+  { name: 'Лесостепи', color: '#E0E0E0', pattern: 'pattern-lesostep' },
+  { name: 'Лесотундра', color: '#BDBDBD', pattern: 'pattern-lesotundra' },
+  { name: 'Степи', color: '#CCCCCC', pattern: 'pattern-steppe' },
+  { name: 'Полупустыни и пустыни', color: '#F0F0F0', pattern: 'pattern-desert' },
+  { name: 'Саванны и редколесья', color: '#A9A9A9', pattern: 'pattern-savanna' },
+  { name: 'Жестколистные леса', color: '#555555', pattern: 'pattern-shrubs' },
+  { name: 'Влажные экваториальные леса', color: '#111111', pattern: 'pattern-jungle' },
+  { name: 'Переменно-влажные леса', color: '#5D5D5D', pattern: 'pattern-peremjungle' },
+  { name: 'Хвойные леса (тайга)', color: '#444444', pattern: 'pattern-taiga' },
+  { name: 'Тундра', color: '#D3D3D3', pattern: 'pattern-tundra' },
+  { name: 'Арктические пустыни', color: '#FFFFFF', pattern: 'pattern-snow' },
+  { name: 'Области высотной поясности', color: '#939393', pattern: 'pattern-mountains' },
+  { name: 'Вечные снега и льды', color: '#F8F8F8', pattern: 'pattern-snow' }
+];
+
 // --- КРАТКИЕ ГЕОГРАФИЧЕСКИЕ ОПИСАНИЯ ЗОН ДЛЯ СТАРШЕКЛАССНИКОВ ---
 const ZONE_DESCRIPTIONS: Record<string, string> = {
   'смешанных лесов': 'Природная зона умеренного пояса, характеризующаяся совместным произрастанием хвойных и мелколиственных древесных пород на дерново-подзолистых почвах.',
   'широколиственных лесов': 'Зона умеренного климата с преобладанием листопадных широколиственных деревьев (дуб, липа, бук). Почвы преимущественно серые лесные.',
   'лесостепей': 'Переходная природная зона умеренного пояса, отличающаяся естественным чередованием массивов лесов со степными участками.',
-  'лесотундры': 'Субарктическая переходная зона, где наряду со мхами, лишайниками и кустарниками встречаются редколесья и низкорослые искривленные деревья.',
+  'лесотундры': 'Субарктическая переходная зона, где наряду с мхами, лишайниками и кустарниками встречаются редколесья и низкорослые искривленные деревья.',
   'степей': 'Травянистая равнинная биома умеренного и субтропического поясов с засушливым климатом и слабовыраженным древесным покровом на плодородных черноземах.',
   'степей (пампа)': 'Субтропическая степная равнина в Южной Америке с густым травяным покровом, развитая в условиях мягкого, относительно влажного климата.',
   'полупустынь и пустынь': 'Регионы с крайне засушливым (аридным) климатом, скудной разреженной растительностью, резкими суточными колебаниями температур и дефицитом влаги.',
@@ -171,6 +192,78 @@ const getZoneColor = (zoneName: string | null): string => {
     case 'вечные снега и льды': return '#E0FFFF';
     default: return '#ffffff';
   }
+};
+
+// --- КОМПОНЕНТ ЭЛЕМЕНТА ЛЕГЕНДЫ С ПАТТЕРНАМИ ДЛЯ ДАЛЬТОНИЗМА ---
+// --- КОМПОНЕНТ ЭЛЕМЕНТА ЛЕГЕНДЫ С ПАТТЕРНАМИ ДЛЯ ДАЛЬТОНИЗМА (С ПОДЛОЖКОЙ ДЛЯ БЕЛЫХ ПАТТЕРНОВ) ---
+const LegendItem: React.FC<{ name: string; color: string; pattern?: string; viewMode: ViewMode }> = ({ name, color, pattern, viewMode }) => {
+  const [patternUrl, setPatternUrl] = useState<string>('');
+  const [patternLoaded, setPatternLoaded] = useState<boolean>(false);
+  
+  // Определяем, является ли паттерн белым/светлым (для влажных лесов, тайги, гор)
+  const isLightPattern = (patternName: string): boolean => {
+    const lightPatterns = ['jungle', 'peremjungle', 'taiga', 'mountains'];
+    return lightPatterns.includes(patternName);
+  };
+  
+  useEffect(() => {
+    if (viewMode === 'achromatopsia' && pattern) {
+      const patternName = pattern.replace('pattern-', '');
+      fetch(`./patterns/${patternName}.png`)
+        .then(res => {
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          return res.blob();
+        })
+        .then(blob => {
+          const url = URL.createObjectURL(blob);
+          setPatternUrl(url);
+          setPatternLoaded(true);
+        })
+        .catch(err => {
+          console.warn(`Паттерн ${patternName}.png не загружен:`, err);
+          setPatternLoaded(false);
+        });
+    }
+    
+    return () => {
+      if (patternUrl) {
+        URL.revokeObjectURL(patternUrl);
+      }
+    };
+  }, [pattern, viewMode]);
+  
+  if (viewMode === 'achromatopsia' && pattern && patternLoaded && patternUrl) {
+    const patternName = pattern.replace('pattern-', '');
+    const needsDarkBackground = isLightPattern(patternName);
+    
+    return (
+      <div className="legend-row">
+        <div 
+          className="legend-color-pattern achrom"
+          style={{ 
+            // Для белых паттернов используем темный фон, для остальных - заданный цвет
+            backgroundColor: needsDarkBackground ? '#333333' : color,
+            backgroundImage: `url(${patternUrl})`,
+            backgroundSize: 'cover',
+            backgroundRepeat: 'repeat',
+            // Для белых паттернов не используем multiply, чтобы они были видны
+            backgroundBlendMode: needsDarkBackground ? 'normal' : 'multiply',
+            position: 'relative',
+            border: needsDarkBackground ? '1px solid #666' : '1px solid #333'
+          }}
+        />
+        <span className="legend-label">{name}</span>
+      </div>
+    );
+  }
+  
+  // Fallback: если паттерн не загрузился, показываем только цвет
+  return (
+    <div className="legend-row">
+      <div className="legend-color-pattern normal" style={{ backgroundColor: color }} />
+      <span className="legend-label">{name}</span>
+    </div>
+  );
 };
 
 const App: React.FC = () => {
@@ -742,16 +835,31 @@ const App: React.FC = () => {
               {isLegendOpen && (
                 <section className="legend-panel">
                   <div className="legend-header">
-                    <h3>Зоны</h3>
-                    <button title="Закрыть легенду" onClick={() => setIsLegendOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}><X size={20}/></button>
+                    <h3>Природные зоны</h3>
+                    <button title="Закрыть легенду" onClick={() => setIsLegendOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer' }}>
+                      <X size={20}/>
+                    </button>
                   </div>
                   <div className="legend-scroll">
-                    {LEGEND_ITEMS.map((item, i) => (
-                      <div key={i} className="legend-row">
-                        <span className="legend-color" style={{background: viewMode === 'achromatopsia' ? '#888888' : item.color}} />
-                        <span className="legend-label">{item.name}</span>
-                      </div>
-                    ))}
+                    {viewMode === 'achromatopsia' 
+                      ? LEGEND_ITEMS_ACHROM.map((item, i) => (
+                          <LegendItem 
+                            key={i} 
+                            name={item.name} 
+                            color={item.color} 
+                            pattern={item.pattern} 
+                            viewMode={viewMode} 
+                          />
+                        ))
+                      : LEGEND_ITEMS_NORMAL.map((item, i) => (
+                          <LegendItem 
+                            key={i} 
+                            name={item.name} 
+                            color={item.color} 
+                            viewMode={viewMode} 
+                          />
+                        ))
+                    }
                   </div>
                 </section>
               )}
@@ -810,7 +918,7 @@ const App: React.FC = () => {
                   className="zone-title-overlay-lowvision"
                   style={{
                     position: 'absolute',
-                    bottom: '90px', // приподнята, чтобы не перекрывать нижнюю плашку "Режим: ..."
+                    bottom: '90px',
                     left: '50%',
                     transform: 'translateX(-50%)',
                     backgroundColor: '#ffeb3b',
