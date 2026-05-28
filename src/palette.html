@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Сравнение палитр природно-климатических зон</title>
+    <style>
+        body { font-family: sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); max-width: 1100px; margin: 0 auto; }
+        h2 { text-align: center; color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #f8f9fa; position: sticky; top: 0; }
+        .color-box { display: inline-block; width: 130px; padding: 6px; text-align: center; border-radius: 4px; font-family: monospace; font-size: 13px; font-weight: bold; border: 1px solid rgba(0,0,0,0.15); }
+        .zone-name { font-weight: 500; color: #444; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Сравнение цветовых шкал Mapbox (Включая Неоновую)</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Природная зона</th>
+                <th>1. NORMAL_PALETTE</th>
+                <th>2. HIGH_CONTRAST</th>
+                <th>3. ACHROM_PALETTE</th>
+                <th>4. NEON_PALETTE ⚡</th>
+            </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+    </table>
+</div>
+
+<script>
+// Обновленный массив зон с добавлением четвертого неонового цвета (c4)
+const zones = [
+    { name: 'смешанных лесов', c1: '#90EE90', c2: '#7CFC00', c3: '#888888', c4: '#00ff00' },
+    { name: 'широколиственных лесов', c1: '#3CB371', c2: '#228B22', c3: '#666666', c4: '#00ff66' },
+    { name: 'лесостепей', c1: '#F0E68C', c2: '#DAA520', c3: '#E0E0E0', c4: '#ffee00' },
+    { name: 'лесотундры', c1: '#D2B48C', c2: '#D2B48C', c3: '#BDBDBD', c4: '#ff9900' },
+    { name: 'степей', c1: '#FFF44F', c2: '#F4A460', c3: '#CCCCCC', c4: '#fff200' },
+    { name: 'степей (пампа)', c1: '#FFF44F', c2: '#F4A460', c3: '#CCCCCC', c4: '#fff200' },
+    { name: 'полупустынь и пустынь', c1: '#F4A460', c2: '#FFD700', c3: '#F0F0F0', c4: '#ff9900' },
+    { name: 'саванн и редколесий', c1: '#BDB76B', c2: '#E9967A', c3: '#A9A9A9', c4: '#e6db00' },
+    { name: 'жестколистных вечнозеленых лесов...', c1: '#808000', c2: '#8B4513', c3: '#555555', c4: '#b3b300' },
+    { name: 'влажных экваториальных лесов', c1: '#008080', c2: '#006400', c3: '#111111', c4: '#00ffff' },
+    { name: 'переменно-влажных лесов', c1: '#20B2AA', c2: '#32CD32', c3: '#333333', c4: '#00ffff' },
+    { name: 'хвойных лесов (тайги)', c1: '#9ACD32', c2: '#004d00', c3: '#444444', c4: '#99ff00' },
+    { name: 'тундры', c1: '#DDA0DD', c2: '#4682B4', c3: '#D3D3D3', c4: '#ff00ff' },
+    { name: 'арктических пустынь', c1: '#DCDCDC', c2: '#FFFFFF', c3: '#FFFFFF', c4: '#aaaaaa' },
+    { name: 'области высотной поясности', c1: '#FFB6C1', c2: '#800080', c3: '#222222', c4: '#ff0044' },
+    { name: 'вечные снега и льды', c1: '#E0FFFF', c2: '#B0E0E6', c3: '#F8F8F8', c4: '#00e5ff' },
+    { name: 'Зона по умолчанию (Fallback)', c1: '#9bf6ff', c2: '#333333', c3: '#888888', c4: '#00ffff' }
+];
+
+// Функция автоматического контраста текста
+function getContrastColor(hexColor) {
+    const r = parseInt(hexColor.substr(1,2),16);
+    const g = parseInt(hexColor.substr(3,2),16);
+    const b = parseInt(hexColor.substr(5,2),16);
+    const yiq = ((r*299)+(g*587)+(b*114))/1000;
+    return (yiq >= 128) ? '#000000' : '#FFFFFF';
+}
+
+const tbody = document.getElementById('table-body');
+zones.forEach(zone => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+        <td class="zone-name">${zone.name}</td>
+        <td><span class="color-box" style="background-color: ${zone.c1}; color: ${getContrastColor(zone.c1)}">${zone.c1}</span></td>
+        <td><span class="color-box" style="background-color: ${zone.c2}; color: ${getContrastColor(zone.c2)}">${zone.c2}</span></td>
+        <td><span class="color-box" style="background-color: ${zone.c3}; color: ${getContrastColor(zone.c3)}">${zone.c3}</span></td>
+        <td><span class="color-box" style="background-color: ${zone.c4}; color: ${getContrastColor(zone.c4)}">${zone.c4}</span></td>
+    `;
+    tbody.appendChild(tr);
+});
+</script>
+</body>
+</html>
