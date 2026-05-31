@@ -1065,12 +1065,12 @@ const App: React.FC = () => {
           {/* ИНКЛЮЗИВНАЯ АДАПТИВНАЯ СИСТЕМА ИНФОРМАЦИОННЫХ ПЛАШЕК (ПРИ КЛИКЕ НА ЗОНУ) */}
           {selectedZone && (
             <div className="zone-info-panel-container">
-              {viewMode === 'normal' && ageGroup === 'teens' ? (
-                /* 1. ОБЫЧНЫЙ РЕЖИМ (СТАРШЕКЛАССНИКИ): Продвинутая плашка с описанием и цветом зоны */
+              {(viewMode === 'normal' || viewMode === 'achromatopsia') && ageGroup === 'teens' ? (
+                /* 1. ОБЫЧНЫЙ РЕЖИМ И ДАЛЬТОНИЗМ (СТАРШЕКЛАССНИКИ): Продвинутая плашка с описанием */
                 <section 
                   className="zone-advanced-card"
                   style={{
-                    backgroundColor: getZoneColor(selectedZone),
+                    backgroundColor: viewMode === 'achromatopsia' ? '#e0e0e0' : getZoneColor(selectedZone),
                     border: '3px solid #000000',
                     color: '#000000'
                   }}
@@ -1080,12 +1080,12 @@ const App: React.FC = () => {
                     {ZONE_DESCRIPTIONS[selectedZone.trim().toLowerCase()] || 'Описание для данной природной зоны подготавливается.'}
                   </p>
                 </section>
-              ) : viewMode === 'normal' && ageGroup === 'kids' ? (
-                /* 2. ОБЫЧНЫЙ РЕЖИМ (ДОШКОЛЬНИКИ): Компактная плашка с названием, подстраивающаяся под цвет зоны */
+              ) : (viewMode === 'normal' || viewMode === 'achromatopsia') && ageGroup === 'kids' ? (
+                /* 2. ОБЫЧНЫЙ РЕЖИМ И ДАЛЬТОНИЗМ (ДОШКОЛЬНИКИ): Компактная плашка с названием */
                 <div 
                   className="zone-title-overlay"
                   style={{
-                    backgroundColor: getZoneColor(selectedZone),
+                    backgroundColor: viewMode === 'achromatopsia' ? '#e0e0e0' : getZoneColor(selectedZone),
                     border: '3px solid #000000',
                     color: '#000000',
                     position: 'static',
@@ -1114,20 +1114,6 @@ const App: React.FC = () => {
                     whiteSpace: 'nowrap',
                     zIndex: 1001,
                     textAlign: 'center'
-                  }}
-                >
-                  {selectedZone}
-                </div>
-              ) : viewMode === 'achromatopsia' ? (
-                /* 4. ДАЛЬТОНИЗМ: Нейтральная серая плашка с черным текстом и обводкой */
-                <div 
-                  className="zone-title-overlay"
-                  style={{
-                    backgroundColor: '#e0e0e0',
-                    border: '3px solid #000000',
-                    color: '#000000',
-                    position: 'static',
-                    transform: 'none'
                   }}
                 >
                   {selectedZone}
