@@ -25,6 +25,7 @@ type Step = 'welcome' | 'setup' | 'map';
 type ViewMode = 'normal' | 'lowVision' | 'achromatopsia';
 type AgeGroup = 'kids' | 'teens';
 
+
 // --- ЧТЕНИЕ URL ПРИ ЗАПУСКЕ (ДЛЯ СОХРАНЕНИЯ РЕЖИМА И ОХВАТОВ) ---
 const getInitialStateFromUrl = () => {
   if (typeof window === 'undefined') return null;
@@ -55,19 +56,94 @@ const REGIONS: Region[] = [
   { id: 'australia', name: 'Австралия', file: './data/australia.geojson', center: [142.84, -26.58], zoom: 3.2 },
 ];
 
-const NORMAL_PALETTE: any = ['match', ['get', 'Zone'], 'смешанных лесов', '#90EE90', 'широколиственных лесов', '#3CB371', 'лесостепей', '#F0E68C', 'лесотундры', '#D2B48C', 'степей', '#FFF44F', 'степей (пампа)', '#FFF44F', 'полупустынь и пустынь', '#F4A460', 'саванн и редколесий', '#BDB76B', 'жестколистных вечнозеленых лесов и кустарников', '#808000', 'жестколистных вечнозеленых лесов и кустарников (средиземноморского типа)', '#808000', 'влажных экваториальных лесов', '#008080', 'переменно-влажных (в том числе муссонных) лесов', '#20B2AA', 'хвойных лесов (тайги)', '#9ACD32', 'тундры', '#DDA0DD', 'тундры и приокеанических лугов', '#D8BFD8', 'арктических пустынь', '#DCDCDC', 'области высотной поясности', '#FFB6C1', 'вечные снега и льды', '#E0FFFF', '#9bf6ff'];
+const NORMAL_PALETTE: any = [
+  'match', ['get', 'Zone'], 
+  'смешанных лесов', '#90EE90', 
+  'смешанных и широколиственных лесов', '#90EE90',
+  'широколиственных лесов', '#3CB371', 
+  'лесостепей', '#F0E68C', 
+  'лесотундры', '#D2B48C', 
+  'тундры и лесотундры', '#DDA0DD',
+  'степей', '#FFF44F', 
+  'степей (пампа)', '#FFF44F', 
+  'лесостепей и степей', '#FFF44F',
+  'полупустынь и пустынь', '#F4A460', 
+  'саванн и редколесий', '#BDB76B', 
+  'жестколистных вечнозеленых лесов и кустарников', '#808000', 
+  'жестколистных вечнозеленых лесов и кустарников (средиземноморского типа)', '#808000', 
+  'влажных экваториальных лесов', '#008080', 
+  'переменно-влажных (в том числе муссонных) лесов', '#20B2AA', 
+  'хвойных лесов (тайги)', '#9ACD32', 
+  'тайги', '#9ACD32',
+  'тундры', '#DDA0DD', 
+  'тундры и приокеанических лугов', '#D8BFD8', 
+  'арктических пустынь', '#DCDCDC', 
+  'области высотной поясности', '#FFB6C1', 
+  'вечные снега и льды', '#E0FFFF', 
+  '#9bf6ff'
+];
 
-const HIGH_CONTRAST_PALETTE: any = ['match', ['get', 'Zone'], 'арктических пустынь', '#FFFFFF', 'вечные снега и льды', '#B0E0E6', 'влажных экваториальных лесов', '#006400', 'жестколистных вечнозеленых лесов и кустарников', '#8B4513', 'жестколистных вечнозеленых лесов и кустарников (средиземноморского типа)', '#8B4513', 'лесостепей', '#DAA520', 'лесотундры', '#D2B48C', 'области высотной поясности', '#800080', 'переменно-влажных (в том числе муссонных) лесов', '#32CD32', 'полупустынь и пустынь', '#FFD700', 'саванн и редколесий', '#E9967A', 'смешанных лесов', '#7CFC00', 'степей', '#F4A460', 'степей (пампа)', '#F4A460', 'тундры', '#4682B4', 'тундры и приокеанических лугов', '#4682B4', 'хвойных лесов (тайги)', '#004d00', 'широколиственных лесов', '#228B22', '#333333'];
+const HIGH_CONTRAST_PALETTE: any = [
+  'match', ['get', 'Zone'], 
+  'арктических пустынь', '#FFFFFF', 
+  'вечные снега и льды', '#B0E0E6', 
+  'влажных экваториальных лесов', '#006400', 
+  'жестколистных вечнозеленых лесов и кустарников', '#8B4513', 
+  'жестколистных вечнозеленых лесов и кустарников (средиземноморского типа)', '#8B4513', 
+  'лесостепей', '#DAA520', 
+  'лесотундры', '#D2B48C', 
+  'тундры и лесотундры', '#4682B4',
+  'области высотной поясности', '#800080', 
+  'переменно-влажных (в том числе муссонных) лесов', '#32CD32', 
+  'полупустынь и пустынь', '#FFD700', 
+  'саванн и редколесий', '#E9967A', 
+  'смешанных лесов', '#7CFC00', 
+  'смешанных и широколиственных лесов', '#7CFC00',
+  'степей', '#F4A460', 
+  'степей (пампа)', '#F4A460', 
+  'лесостепей и степей', '#F4A460',
+  'тундры', '#4682B4', 
+  'тундры и приокеанических лугов', '#4682B4', 
+  'хвойных лесов (тайги)', '#004d00', 
+  'тайги', '#004d00',
+  'широколиственных лесов', '#228B22', 
+  '#333333'
+];
 
-const ACHROM_PALETTE: any = ['match', ['get', 'Zone'], 'арктических пустынь', '#FFFFFF', 'вечные снега и льды', '#F8F8F8', 'тундры', '#D3D3D3', 'лесотундры', '#BDBDBD', 'хвойных лесов (тайги)', '#444444', 'смешанных лесов', '#888888', 'широколиственных лесов', '#666666', 'лесостепей', '#E0E0E0', 'степей', '#CCCCCC', 'полупустынь и пустынь', '#F0F0F0', 'саванн и редколесий', '#A9A9A9', 'жестколистных вечнозеленых лесов и кустарников', '#555555', 'переменно-влажных (в том числе муссонных) лесов', '#5D5D5D', 'влажных экваториальных лесов', '#111111', 'области высотной поясности', '#939393', '#888888'];
+const ACHROM_PALETTE: any = [
+  'match', ['get', 'Zone'], 
+  'арктических пустынь', '#FFFFFF', 
+  'вечные снега и льды', '#F8F8F8', 
+  'тундры', '#D3D3D3', 
+  'лесотундры', '#BDBDBD', 
+  'тундры и лесотундры', '#D3D3D3',
+  'хвойных лесов (тайги)', '#444444', 
+  'тайги', '#444444',
+  'смешанных лесов', '#888888', 
+  'смешанных и широколиственных лесов', '#888888',
+  'широколиственных лесов', '#666666', 
+  'лесостепей', '#E0E0E0', 
+  'степей', '#CCCCCC', 
+  'лесостепей и степей', '#CCCCCC',
+  'полупустынь и пустынь', '#F0F0F0', 
+  'саванн и редколесий', '#A9A9A9', 
+  'жестколистных вечнозеленых лесов и кустарников', '#555555', 
+  'переменно-влажных (в том числе муссонных) лесов', '#5D5D5D', 
+  'влажных экваториальных лесов', '#111111', 
+  'области высотной поясности', '#939393', 
+  '#888888'
+];
 
 const ACHROM_PATTERNS: any = [
   'match', ['get', 'Zone'],
   'хвойных лесов (тайги)', 'pattern-taiga',
+  'тайги', 'pattern-taiga',
   'широколиственных лесов', 'pattern-broadleaf',
   'смешанных лесов', 'pattern-mixed',
+  'смешанных и широколиственных лесов', 'pattern-mixed',
   'степей', 'pattern-steppe',
   'степей (пампа)', 'pattern-steppe',
+  'лесостепей и степей', 'pattern-steppe',
   'лесостепей', 'pattern-lesostep',
   'полупустынь и пустынь', 'pattern-desert',
   'саванн и редколесий', 'pattern-savanna',
@@ -75,9 +151,10 @@ const ACHROM_PATTERNS: any = [
   'переменно-влажных (в том числе муссонных) лесов', 'pattern-peremjungle',
   'тундры', 'pattern-tundra',
   'лесотундры', 'pattern-lesotundra',
+  'тундры и лесотундры', 'pattern-tundra',
   'тундры и приокеанических лугов', 'pattern-tundra',
   'арктических пустынь', 'pattern-snow',
-  'вечные снега и льды', 'pattern-snow',
+  'вечные снега и льды', 'pattern-led',
   'области высотной поясности', 'pattern-mountains',
   'жестколистных вечнозеленых лесов и кустарников', 'pattern-shrubs',
   'жестколистных вечнозеленых лесов и кустарников (средиземноморского типа)', 'pattern-shrubs',
@@ -90,12 +167,16 @@ const ANIMAL_ICONS: any = [
   'вечные снега и льды', 'icon-penguin',
   'тундры', 'icon-reindeer',
   'лесотундры', 'icon-reindeer',
+  'тундры и лесотундры', 'icon-reindeer',
   'тундры и приокеанических лугов', 'icon-reindeer',
   'хвойных лесов (тайги)', 'icon-brown-bear',
+  'тайги', 'icon-brown-bear',
   'смешанных лесов', 'icon-wolf',
+  'смешанных и широколиственных лесов', 'icon-wolf',
   'широколиственных лесов', 'icon-fox',
   'лесостепей', 'icon-suslik',
   'степей', 'icon-suslik',
+  'лесостепей и степей', 'icon-suslik',
   'степей (пампа)', 'icon-bron',
   'полупустынь и пустынь', 'icon-camel',
   'саванн и редколесий', 'icon-lion',
@@ -106,7 +187,6 @@ const ANIMAL_ICONS: any = [
 ];
 
 // --- ЛЕГЕНДЫ ---
-// Легенда для обычного режима (цветная)
 const LEGEND_ITEMS_NORMAL = [
   { name: 'Смешанные леса', color: '#90EE90' },
   { name: 'Широколиственные леса', color: '#3CB371' },
@@ -125,7 +205,6 @@ const LEGEND_ITEMS_NORMAL = [
   { name: 'Вечные снега и льды', color: '#E0FFFF' }
 ];
 
-// Легенда для дальтонизма (серый + паттерн)
 const LEGEND_ITEMS_ACHROM = [
   { name: 'Смешанные леса', color: '#888888', pattern: 'pattern-mixed' },
   { name: 'Широколиственные леса', color: '#666666', pattern: 'pattern-broadleaf' },
@@ -141,7 +220,7 @@ const LEGEND_ITEMS_ACHROM = [
   { name: 'Тундра', color: '#D3D3D3', pattern: 'pattern-tundra' },
   { name: 'Арктические пустыни', color: '#FFFFFF', pattern: 'pattern-snow' },
   { name: 'Области высотной поясности', color: '#939393', pattern: 'pattern-mountains' },
-  { name: 'Вечные снега и льды', color: '#F8F8F8', pattern: 'pattern-snow' }
+  { name: 'Вечные снега и льды', color: '#F8F8F8', pattern: 'pattern-led' }
 ];
 
 // --- КРАТКИЕ ГЕОГРАФИЧЕСКИЕ ОПИСАНИЯ ЗОН ДЛЯ СТАРШЕКЛАССНИКОВ ---
@@ -166,26 +245,29 @@ const ZONE_DESCRIPTIONS: Record<string, string> = {
   'вечные снега и льды': 'Полярные и высокогорные регионы, постоянно покрытые ледниками и фирновым снегом, где процессы таяния уступают процессам аккумуляции твердых осадков.'
 };
 
-// Исправленная функция-словарь для безошибочного получения цвета зоны
 const getZoneColor = (zoneName: string | null): string => {
   if (!zoneName) return '#ffffff';
   const lower = zoneName.toLowerCase().trim();
 
   switch (lower) {
-    case 'смешанных лесов': return '#90EE90';
+    case 'смешанных лесов': 
+    case 'смешанных и широколиственных лесов': return '#90EE90';
     case 'широколиственных лесов': return '#3CB371';
     case 'лесостепей': return '#F0E68C';
     case 'лесотундры': return '#D2B48C';
     case 'степей':
-    case 'степей (пампа)': return '#FFF44F';
+    case 'степей (пампа)': 
+    case 'лесостепей и степей': return '#FFF44F';
     case 'полупустынь и пустынь': return '#F4A460';
     case 'саванн и редколесий': return '#BDB76B';
     case 'жестколистных вечнозеленых лесов и кустарников':
     case 'жестколистных вечнозеленых лесов и кустарников (средиземноморского типа)': return '#808000';
     case 'влажных экваториальных лесов': return '#008080';
     case 'переменно-влажных (в том числе муссонных) лесов': return '#20B2AA';
-    case 'хвойных лесов (тайги)': return '#9ACD32';
+    case 'хвойных лесов (тайги)': 
+    case 'тайги': return '#9ACD32';
     case 'тундры':
+    case 'тундры и лесотундры':
     case 'тундры и приокеанических лугов': return '#DDA0DD';
     case 'арктических пустынь': return '#DCDCDC';
     case 'области высотной поясности': return '#FFB6C1';
@@ -194,13 +276,10 @@ const getZoneColor = (zoneName: string | null): string => {
   }
 };
 
-// --- КОМПОНЕНТ ЭЛЕМЕНТА ЛЕГЕНДЫ С ПАТТЕРНАМИ ДЛЯ ДАЛЬТОНИЗМА ---
-// --- КОМПОНЕНТ ЭЛЕМЕНТА ЛЕГЕНДЫ С ПАТТЕРНАМИ ДЛЯ ДАЛЬТОНИЗМА (С ПОДЛОЖКОЙ ДЛЯ БЕЛЫХ ПАТТЕРНОВ) ---
 const LegendItem: React.FC<{ name: string; color: string; pattern?: string; viewMode: ViewMode }> = ({ name, color, pattern, viewMode }) => {
   const [patternUrl, setPatternUrl] = useState<string>('');
   const [patternLoaded, setPatternLoaded] = useState<boolean>(false);
   
-  // Определяем, является ли паттерн белым/светлым (для влажных лесов, тайги, гор)
   const isLightPattern = (patternName: string): boolean => {
     const lightPatterns = ['jungle', 'peremjungle', 'taiga', 'mountains'];
     return lightPatterns.includes(patternName);
@@ -241,12 +320,10 @@ const LegendItem: React.FC<{ name: string; color: string; pattern?: string; view
         <div 
           className="legend-color-pattern achrom"
           style={{ 
-            // Для белых паттернов используем темный фон, для остальных - заданный цвет
             backgroundColor: needsDarkBackground ? '#333333' : color,
             backgroundImage: `url(${patternUrl})`,
             backgroundSize: 'cover',
             backgroundRepeat: 'repeat',
-            // Для белых паттернов не используем multiply, чтобы они были видны
             backgroundBlendMode: needsDarkBackground ? 'normal' : 'multiply',
             position: 'relative',
             border: needsDarkBackground ? '1px solid #666' : '1px solid #333'
@@ -257,7 +334,6 @@ const LegendItem: React.FC<{ name: string; color: string; pattern?: string; view
     );
   }
   
-  // Fallback: если паттерн не загрузился, показываем только цвет
   return (
     <div className="legend-row">
       <div className="legend-color-pattern normal" style={{ backgroundColor: color }} />
@@ -292,10 +368,12 @@ const App: React.FC = () => {
   const viewModeRef = useRef(viewMode);
   const regionIdxRef = useRef(currentRegionIdx);
   const isMutedRef = useRef(isMuted);
+  const ageGroupRef = useRef(ageGroup);
 
   useEffect(() => { viewModeRef.current = viewMode; }, [viewMode]);
   useEffect(() => { regionIdxRef.current = currentRegionIdx; }, [currentRegionIdx]);
   useEffect(() => { isMutedRef.current = isMuted; }, [isMuted]);
+  useEffect(() => { ageGroupRef.current = ageGroup; }, [ageGroup]);
 
   // --- ЗВУКИ ---
   const stopAudio = () => {
@@ -313,13 +391,40 @@ const App: React.FC = () => {
     if (isMutedRef.current || !name) return;
 
     const lowerName = name.trim().toLowerCase();
-    let fileName = (lowerName.startsWith('зона') || 
+    let fileName = name;
+    let folder = './music/';
+
+    // Логика подхвата аудиофайлов с учетом возраста и новых зон
+    if (ageGroupRef.current === 'kids') {
+      if (lowerName === 'тундры и лесотундры') {
+        fileName = 'Зона тундры и лесотундры';
+        folder = './music2/';
+      } else if (lowerName === 'смешанных и широколиственных лесов') {
+        fileName = 'Зона смешанных и широколиственных лесов';
+        folder = './music2/';
+      } else if (lowerName === 'лесостепей и степей') {
+        fileName = 'Зона лесостепей и степей';
+        folder = './music2/';
+      } else if (lowerName === 'тайги') {
+        fileName = 'Зона хвойных лесов (тайги)';
+      } else if (lowerName === 'жестколистных вечнозеленых лесов и кустарников') {
+        fileName = 'Зона жестколистных вечнозеленых лесов и кустарников';
+      } else {
+        fileName = (lowerName.startsWith('зона') || 
                     lowerName.startsWith('вечные') || 
                     lowerName.startsWith('области')) 
-      ? name 
-      : `Зона ${name}`;
+          ? name 
+          : `Зона ${name}`;
+      }
+    } else {
+      fileName = (lowerName.startsWith('зона') || 
+                  lowerName.startsWith('вечные') || 
+                  lowerName.startsWith('области')) 
+        ? name 
+        : `Зона ${name}`;
+    }
 
-    const audio = new Audio(`./music/${fileName}.mp3`);
+    const audio = new Audio(`${folder}${fileName}.mp3`);
     audio.play().catch(err => console.error("Audio error:", fileName, err));
     audioRef.current = audio;
   }, []);
@@ -335,6 +440,12 @@ const App: React.FC = () => {
     stopAudio();
     setCurrentRegionIdx(0); 
     if (mapRef.current) {
+      // Сбрасываем жесткие ограничения зума и панорамирования при выходе
+      mapRef.current.setMinZoom(0);
+      mapRef.current.setMaxZoom(22);
+      mapRef.current.dragPan.enable();
+      mapRef.current.keyboard.enable();
+
       REGIONS.forEach(reg => {
         if (reg.id !== 'world' && mapRef.current?.getLayer(`${reg.id}-fill`)) {
           mapRef.current.setLayoutProperty(`${reg.id}-fill`, 'visibility', 'none');
@@ -474,7 +585,7 @@ const App: React.FC = () => {
     m.on('load', () => {
       const patterns = [
         'taiga', 'broadleaf', 'mixed', 'steppe', 'lesostep', 'desert', 'savanna', 'peremjungle', 
-        'jungle', 'tundra', 'lesotundra', 'snow', 'mountains', 'shrubs'
+        'jungle', 'tundra', 'lesotundra', 'snow', 'mountains', 'shrubs', 'led'
       ];
 
       patterns.forEach(name => {
@@ -505,11 +616,20 @@ const App: React.FC = () => {
           .catch(err => console.warn(`Ошибка иконки животного ${name}:`, err));
       });
 
-      m.addSource('zones-data', { type: 'geojson', data: './data/mir.geojson' });
+      // Динамический выбор папки и файлов GeoJSON в зависимости от возраста
+      const getGeoJsonPath = (regionId: string) => {
+        if (ageGroup === 'kids') {
+          return regionId === 'world' ? './data2/mir_2.geojson' : `./data2/${regionId}_2.geojson`;
+        } else {
+          return regionId === 'world' ? './data/mir.geojson' : `./data/${regionId}.geojson`;
+        }
+      };
+
+      m.addSource('zones-data', { type: 'geojson', data: getGeoJsonPath('world') });
 
       REGIONS.forEach(reg => {
         if (reg.id === 'world') return;
-        m.addSource(`${reg.id}-source`, { type: 'geojson', data: reg.file });
+        m.addSource(`${reg.id}-source`, { type: 'geojson', data: getGeoJsonPath(reg.id) });
       });
 
       m.addLayer({ id: 'zones-shaded', type: 'fill', source: 'zones-data', layout: { visibility: 'none' }, paint: { 'fill-color': '#000000', 'fill-opacity': 0.6 } });
@@ -545,7 +665,18 @@ const App: React.FC = () => {
 
       applyMode(m, viewModeRef.current, ageGroup);
 
+      // Если стартуем сразу в режиме слабовидения, вешаем ограничения на нулевой регион
+      if (viewModeRef.current === 'lowVision') {
+        m.setMinZoom(REGIONS[0].zoom);
+        m.setMaxZoom(REGIONS[0].zoom + 2); // ограничение: только два зума вглубь
+        m.dragPan.disable(); // полностью запрещаем перетаскивание
+        m.keyboard.disable();
+      }
+
       if (isViewOnly && savedExtents.length > 0) {
+        // Для просмотра по ссылке ограничения лучше временно снять, чтобы fitBounds корректно отработал
+        m.setMinZoom(0);
+        m.setMaxZoom(22);
         m.fitBounds(savedExtents[0].bounds, { padding: 50 });
       }
 
@@ -590,6 +721,31 @@ const App: React.FC = () => {
           }
         });
         m.setLayoutProperty('zones-shaded', 'visibility', 'none');
+
+        // Управление ограничениями зума и перемещения при смене режима
+        if (viewMode === 'lowVision') {
+          const reg = REGIONS[regionIdxRef.current];
+          // Сначала снимаем ограничения, чтобы можно было подлететь в центр
+          m.setMinZoom(0);
+          m.setMaxZoom(22);
+          m.flyTo({ center: reg.center, zoom: reg.zoom, essential: true });
+          
+          m.once('moveend', () => {
+            if (viewModeRef.current === 'lowVision') {
+              m.setMinZoom(reg.zoom);
+              m.setMaxZoom(reg.zoom + 2);
+              m.dragPan.disable();
+              m.keyboard.disable();
+            }
+          });
+        } else {
+          // Если вышли из режима слабовидения, возвращаем свободу действий
+          m.setMinZoom(0);
+          m.setMaxZoom(22);
+          m.dragPan.enable();
+          m.keyboard.enable();
+        }
+
       } catch(e) {
         console.warn("Стиль обновлен с задержкой", e);
       }
@@ -658,7 +814,10 @@ const App: React.FC = () => {
       });
       setIsDrawing(false);
       setBox(null);
-      m.dragPan.enable();
+      // Возвращаем dragPan, только если мы не в режиме слабовидения
+      if (viewModeRef.current !== 'lowVision') {
+        m.dragPan.enable();
+      }
     };
 
     m.on('mousedown', onMouseDown);
@@ -697,7 +856,24 @@ const App: React.FC = () => {
       m.setLayoutProperty(`${nextReg.id}-outline`, 'visibility', 'visible');
     }
 
+    // ВАЖНО: Сначала полностью снимаем ограничения, чтобы карта могла свободно долететь до новой точки
+    m.setMinZoom(0);
+    m.setMaxZoom(22);
+    m.dragPan.enable();
+    m.keyboard.enable();
+
     m.flyTo({ center: nextReg.center, zoom: nextReg.zoom, speed: 1.0, essential: true });
+    
+    // Как только долетели — снова фиксируем карту
+    m.once('moveend', () => {
+      if (viewModeRef.current === 'lowVision') {
+        m.setMinZoom(nextReg.zoom);
+        m.setMaxZoom(nextReg.zoom + 2); // Даем возможность приблизить максимум на 2 уровня
+        m.dragPan.disable(); // Блокируем сдвиг (pan)
+        m.keyboard.disable();
+      }
+    });
+
     setCurrentRegionIdx(newIdx);
     setSelectedZone(null);
   };
@@ -707,7 +883,13 @@ const App: React.FC = () => {
     if (newIdx < 0) newIdx = savedExtents.length - 1;
     if (newIdx >= savedExtents.length) newIdx = 0;
     setViewExtentIdx(newIdx);
-    mapRef.current?.fitBounds(savedExtents[newIdx].bounds, { padding: 60, speed: 1.2 });
+    
+    if (mapRef.current) {
+      // Снимаем ограничения, чтобы fitBounds корректно сработал
+      mapRef.current.setMinZoom(0);
+      mapRef.current.setMaxZoom(22);
+      mapRef.current.fitBounds(savedExtents[newIdx].bounds, { padding: 60, speed: 1.2 });
+    }
   };
 
   const generateShareLink = () => {
