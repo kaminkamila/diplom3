@@ -235,7 +235,6 @@ html, body, #root {
   border-width: 0;
 }
 
-/* --- ОБНОВЛЕННЫЕ СТИЛИ ПРИВЕТСТВЕННОГО ЭКРАНА (ЦЕНТРИРОВАНИЕ) --- */
 .welcome-screen, .setup-screen  {
   position: fixed;
   top: 0;
@@ -277,7 +276,6 @@ html, body, #root {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  /* ПРАВКА: Центрируем заголовок относительно блока */
   align-items: center; 
 }
 
@@ -287,7 +285,6 @@ html, body, #root {
   margin: 0;
   font-weight: normal;
   white-space: nowrap; 
-  /* ПРАВКА: Текст заголовка по центру */
   text-align: center;
 }
 
@@ -296,7 +293,6 @@ html, body, #root {
   padding: 25px;
   border-radius: 20px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-  /* ПРАВКА: Чтобы блок растягивался правильно при центрировании */
   width: 100%; 
 }
 
@@ -305,11 +301,10 @@ html, body, #root {
   color: black;
   font-size: 20px; 
   line-height: 1.35;
-  /* ПРАВКА: Выравнивание текста внутри прямоугольника по центру */
   text-align: center; 
 }
 
-/* --- КНОПКА (БЕЗ ИЗМЕНЕНИЙ) --- */
+/* --- КНОПКА--- */
 .welcome-start-btn, .confirm-setup-btn {
   position: absolute;
   width: 220px; 
@@ -379,7 +374,7 @@ html, body, #root {
   justify-content: center;
 }
 
-/* --- КНОПКИ ВЫБОРА РЕЖИМА (ИСПРАВЛЕНО) --- */
+/* --- КНОПКИ ВЫБОРА РЕЖИМА --- */
 .setup-btn {
   background-color: #ffffff;
   border: 1px solid #ccc;
@@ -390,11 +385,9 @@ html, body, #root {
   border-radius: 10px;
   color: #333;
   transition: all 0.2s ease-in-out;
-  
-  /* КРИТИЧЕСКИЕ ПРАВКИ ПРОТИВ ЖЕЛТИЗНЫ: */
-  outline: none !important; /* Убирает контур фокуса */
-  -webkit-tap-highlight-color: transparent; /* Убирает синий/желтый квадрат при клике на смартфонах */
-  user-select: none; /* Убирает выделение текста при частом клике */
+  outline: none !important;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 /* Убираем фокус-рамку для всех типов нажатий */
@@ -405,14 +398,14 @@ html, body, #root {
   box-shadow: none !important;
 }
 
-/* Подсветка при наведении — Твой зеленый */
+/* Подсветка при наведении*/
 .setup-btn:hover {
   border-color: #92B06D !important;
   background-color: #f0f7e9;
   color: #92B06D;
 }
 
-/* Активное состояние (нажата) — Твой зеленый */
+/* Активное состояние (нажата)*/
 .setup-btn.active {
   background-color: #92B06D !important;
   color: white !important;
@@ -492,7 +485,7 @@ html, body, #root {
 .record-route-btn {
   position: absolute;
   bottom: 40px;
-  right: 120px;           /* сдвинул, чтобы не перегораживала controls-stack */
+  right: 120px;       
   width: 62px;
   height: 62px;
   border-radius: 50%;
